@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.UI; // Para mostrar el tiempo opcional
-
+using UnityEngine.UI; 
 public class GameManager : MonoBehaviour
 {
-    public float roundDuration = 60f; // 1 minuto
+    public float roundDuration = 60f;
     private float timer;
     private int currentRound = 1;
     private int maxRounds = 3;
@@ -11,7 +10,7 @@ public class GameManager : MonoBehaviour
     public PlayerController player1;
     public PlayerController player2;
 
-    public Text timerText; // Opcional, para mostrar el tiempo en UI
+    public Text timerText; 
 
     private void Start()
     {
@@ -24,7 +23,7 @@ public class GameManager : MonoBehaviour
         timer -= Time.deltaTime;
 
         if (timerText != null)
-            timerText.text = Mathf.CeilToInt(timer).ToString(); // Mostrar tiempo
+            timerText.text = Mathf.CeilToInt(timer).ToString();
 
         if (timer <= 0)
         {
@@ -50,19 +49,18 @@ public class GameManager : MonoBehaviour
     private void EndGame()
     {
         Debug.Log("Fin del juego!");
-        // Podrías mostrar pantalla de resultados, etc.
+       
     }
 
     private void AssignRoles()
     {
-      
         player1.SetRole(true);
         player2.SetRole(false);
     }
 
     private void SwapRoles()
     {
-        // Invertir roles
+       
         bool player1IsShooter = player1.isShooter;
         player1.SetRole(!player1IsShooter);
         player2.SetRole(player1IsShooter);
