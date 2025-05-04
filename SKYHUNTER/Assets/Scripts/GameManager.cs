@@ -1,33 +1,117 @@
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 public class GameManager : MonoBehaviour
 {
+    [Header("Configuración de Rondas")]
     public float roundDuration = 60f;
-    private float timer;
-    private int currentRound = 1;
-    private int maxRounds = 3;
+    public int maxRounds = 3;
 
+    [Header("Configuración de Jugadores")]
+    public int maxLives = 3;
     public PlayerController player1;
     public PlayerController player2;
 
-    public Text timerText; 
+    [Header("Interfaz de Usuario")]
+    public Text timerText;
+    public Text livesText;
+    public Text roundText;
+    public GameObject gameOverPanel;
+    public Button restartButton;
 
-    private void Start()
+    private float timer;
+    private int currentRound = 1;
+    private int currentLives;
+
+    public static GameManager Instance { get; private set; }
+
+    void Awake()
     {
-        timer = roundDuration;
-        AssignRoles();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    private void Update()
+    void Start()
     {
-        timer -= Time.deltaTime;
+        InitializeGame();
+        restartButton.onClick.AddListener(RestartGame);
+    }
 
-        if (timerText != null)
-            timerText.text = Mathf.CeilToInt(timer).ToString();
-
-        if (timer <= 0)
+    void Update()
+    {
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            UpdateUI();
+        }
+        else
         {
             EndRound();
+        }
+    }
+
+    public void PlayerHit()
+    {
+        currentLives--;
+        UpdateUI();
+
+        if (currentLives <= 0)
+        {
+            HandlePlayerDeath();
+        }
+    }
+
+    private void InitializeGame()
+    {
+        timer = roundDuration;
+        currentLives = maxLives;
+        currentRound = 1;
+        Time.timeScale = 1f;
+
+        gameOverPanel.SetActive(false);
+        UpdateUI();
+        AssignRoles();
+
+        ResetAllPlayers();
+    }
+
+    private void ResetAllPlayers()
+    {
+        PlayerHealth[] players = FindObjectsOfType<PlayerHealth>();
+        foreach (var player in players)
+        {
+            player.ResetPlayer();
+        }
+    }
+
+    private void UpdateUI()
+    {
+        timerText.text = $"Tiempo: {Mathf.CeilToInt(timer)}";
+        livesText.text = $"Vidas: {currentLives}";
+        roundText.text = $"Ronda: {currentRound}/{maxRounds}";
+    }
+
+    private void HandlePlayerDeath()
+    {
+        currentRound++;
+
+        if (currentRound > maxRounds)
+        {
+            EndGame();
+        }
+        else
+        {
+            currentLives = maxLives;
+            SwapRoles();
+            timer = roundDuration;
+            ResetAllPlayers();
         }
     }
 
@@ -43,13 +127,17 @@ public class GameManager : MonoBehaviour
         {
             SwapRoles();
             timer = roundDuration;
+            currentLives = maxLives;
+            ResetAllPlayers();
         }
     }
 
     private void EndGame()
     {
-        Debug.Log("Fin del juego!");
-       
+        Time.timeScale = 0f;
+        gameOverPanel.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private void AssignRoles()
@@ -60,9 +148,13 @@ public class GameManager : MonoBehaviour
 
     private void SwapRoles()
     {
-       
         bool player1IsShooter = player1.isShooter;
         player1.SetRole(!player1IsShooter);
         player2.SetRole(player1IsShooter);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
