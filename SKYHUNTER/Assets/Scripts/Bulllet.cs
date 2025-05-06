@@ -4,7 +4,7 @@ public class Bullet : MonoBehaviour
 {
 
     public float lifeTime = 3f;
-
+    
     void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour
         {
             Debug.Log("Hit player!");
             Destroy(gameObject);
-            // Podés agregar aquí lógica para daño o puntos
+          
         }
     }
 }
