@@ -4,6 +4,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Botones UI Jugador 1")]
+    public GameObject player1ShootButton;
+    public GameObject player1LeftButton;
+    public GameObject player1RightButton;
+
+    [Header("Botones UI Jugador 2")]
+    public GameObject player2ShootButton;
+    public GameObject player2LeftButton;
+    public GameObject player2RightButton;
+
     [Header("Configuración de Rondas")]
     public float roundDuration = 60f;
     public int maxRounds = 3;
@@ -28,25 +38,29 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // Singleton básico
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     void Start()
     {
+        // Desactivar todos los botones al iniciar
+        player1ShootButton.SetActive(false);
+        player1LeftButton.SetActive(false);
+        player1RightButton.SetActive(false);
+
+        player2ShootButton.SetActive(false);
+        player2LeftButton.SetActive(false);
+        player2RightButton.SetActive(false);
+
         InitializeGame();
         restartButton.onClick.AddListener(RestartGame);
     }
 
     void Update()
     {
-        if (timer > 0)
+        if (timer > 0f)
         {
             timer -= Time.deltaTime;
             UpdateUI();
@@ -63,9 +77,7 @@ public class GameManager : MonoBehaviour
         UpdateUI();
 
         if (currentLives <= 0)
-        {
             HandlePlayerDeath();
-        }
     }
 
     private void InitializeGame()
@@ -77,18 +89,15 @@ public class GameManager : MonoBehaviour
 
         gameOverPanel.SetActive(false);
         UpdateUI();
-        AssignRoles();
 
+        AssignRoles();
         ResetAllPlayers();
     }
 
     private void ResetAllPlayers()
     {
-        PlayerHealth[] players = FindObjectsOfType<PlayerHealth>();
-        foreach (var player in players)
-        {
-            player.ResetPlayer();
-        }
+        foreach (var ph in FindObjectsOfType<PlayerHealth>())
+            ph.ResetPlayer();
     }
 
     private void UpdateUI()
@@ -98,14 +107,22 @@ public class GameManager : MonoBehaviour
         roundText.text = $"Ronda: {currentRound}/{maxRounds}";
     }
 
+    private void UpdateButtonsVisibility()
+    {
+        // Jugador 1
+        player1ShootButton.SetActive(player1.isShooter);
+        player1LeftButton.SetActive(!player1.isShooter);
+        player1RightButton.SetActive(!player1.isShooter);
+        // Jugador 2
+        player2ShootButton.SetActive(player2.isShooter);
+        player2LeftButton.SetActive(!player2.isShooter);
+        player2RightButton.SetActive(!player2.isShooter);
+    }
+
     private void HandlePlayerDeath()
     {
         currentRound++;
-
-        if (currentRound > maxRounds)
-        {
-            EndGame();
-        }
+        if (currentRound > maxRounds) EndGame();
         else
         {
             currentLives = maxLives;
@@ -118,16 +135,12 @@ public class GameManager : MonoBehaviour
     private void EndRound()
     {
         currentRound++;
-
-        if (currentRound > maxRounds)
-        {
-            EndGame();
-        }
+        if (currentRound > maxRounds) EndGame();
         else
         {
+            currentLives = maxLives;
             SwapRoles();
             timer = roundDuration;
-            currentLives = maxLives;
             ResetAllPlayers();
         }
     }
@@ -142,15 +155,18 @@ public class GameManager : MonoBehaviour
 
     private void AssignRoles()
     {
+        // Ronda 1: Player1 dispara, Player2 esquiva
         player1.SetRole(true);
         player2.SetRole(false);
+        UpdateButtonsVisibility();
     }
 
     private void SwapRoles()
     {
-        bool player1IsShooter = player1.isShooter;
-        player1.SetRole(!player1IsShooter);
-        player2.SetRole(player1IsShooter);
+        bool p1s = player1.isShooter;
+        player1.SetRole(!p1s);
+        player2.SetRole(p1s);
+        UpdateButtonsVisibility();
     }
 
     public void RestartGame()

@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Configuración")]
-    public int playerNumber = 1;
+ 
 
     [Header("Efectos")]
     public AudioClip hitSound;
@@ -36,38 +36,30 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeHit()
     {
+        // Resta una vida genérica
         GameManager.Instance.PlayerHit();
         FlashPlayer();
     }
 
-    private void PlayHitEffects(Vector3 position)
+    private void PlayHitEffects(Vector3 pos)
     {
         if (hitEffect != null)
-        {
-            Instantiate(hitEffect, position, Quaternion.identity);
-        }
+            Instantiate(hitEffect, pos, Quaternion.identity);
 
-        if (hitSound != null && audioSource != null)
-        {
+        if (hitSound != null)
             audioSource.PlayOneShot(hitSound);
-        }
     }
 
     private void FlashPlayer()
     {
-        if (playerRenderer != null && hitMaterial != null)
-        {
-            playerRenderer.material = hitMaterial;
-            Invoke(nameof(ResetMaterial), flashDuration);
-        }
+        if (hitMaterial == null) return;
+        playerRenderer.material = hitMaterial;
+        Invoke(nameof(ResetMaterial), flashDuration);
     }
 
     private void ResetMaterial()
     {
-        if (playerRenderer != null)
-        {
-            playerRenderer.material = originalMaterial;
-        }
+        playerRenderer.material = originalMaterial;
     }
 
     public void ResetPlayer()
@@ -81,9 +73,6 @@ public class PlayerHealth : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        if (playerRenderer != null)
-        {
-            playerRenderer.material = originalMaterial;
-        }
+        playerRenderer.material = originalMaterial;
     }
 }
