@@ -22,37 +22,44 @@ public class GameManager : MonoBehaviour
     public int maxLives = 3;
     public PlayerController player1;
     public PlayerController player2;
+    public PlayerHealth player1Health;
+    public PlayerHealth player2Health;
 
     [Header("Interfaz de Usuario")]
     public Text timerText;
-    public Text livesText;
+    public Text player1LivesText;
+    public Text player2LivesText;
     public Text roundText;
     public GameObject gameOverPanel;
     public Button restartButton;
 
     private float timer;
     private int currentRound = 1;
-    private int currentLives;
+    private bool gameEnded = false;
+    private int player1Lives;
+    private int player2Lives;
 
     public static GameManager Instance { get; private set; }
 
     void Awake()
     {
-        // Singleton básico
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
     void Start()
     {
-        // Desactivar todos los botones al iniciar
+        // Inicialización de botones
         player1ShootButton.SetActive(false);
         player1LeftButton.SetActive(false);
         player1RightButton.SetActive(false);
-
         player2ShootButton.SetActive(false);
         player2LeftButton.SetActive(false);
         player2RightButton.SetActive(false);
+
+        // Inicialización de vidas
+        player1Lives = maxLives;
+        player2Lives = maxLives;
 
         InitializeGame();
         restartButton.onClick.AddListener(RestartGame);
@@ -60,60 +67,64 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (timer > 0f)
+        if (!gameEnded && timer > 0f)
         {
             timer -= Time.deltaTime;
             UpdateUI();
         }
-        else
+        else if (!gameEnded)
         {
             EndRound();
         }
     }
 
-    public void PlayerHit()
+    public void PlayerHit(int playerID)
     {
-        currentLives--;
+        // Actualizar vidas
+        if (playerID == 1) player1Lives--;
+        else if (playerID == 2) player2Lives--;
+
         UpdateUI();
 
-        if (currentLives <= 0)
+        // Verificar fin de ronda
+        if (player1Lives <= 0 || player2Lives <= 0)
+        {
             HandlePlayerDeath();
+        }
     }
 
     private void InitializeGame()
     {
         timer = roundDuration;
-        currentLives = maxLives;
-        currentRound = 1;
+        gameEnded = false;
         Time.timeScale = 1f;
 
         gameOverPanel.SetActive(false);
         UpdateUI();
-
         AssignRoles();
         ResetAllPlayers();
     }
 
     private void ResetAllPlayers()
     {
-        foreach (var ph in FindObjectsOfType<PlayerHealth>())
-            ph.ResetPlayer();
+        player1Health.ResetPlayer();
+        player2Health.ResetPlayer();
     }
 
     private void UpdateUI()
     {
+        player1LivesText.text = $"J1: {player1Lives}/{maxLives}";
+        player2LivesText.text = $"J2: {player2Lives}/{maxLives}";
         timerText.text = $"Tiempo: {Mathf.CeilToInt(timer)}";
-        livesText.text = $"Vidas: {currentLives}";
         roundText.text = $"Ronda: {currentRound}/{maxRounds}";
     }
 
     private void UpdateButtonsVisibility()
     {
-        // Jugador 1
         player1ShootButton.SetActive(player1.isShooter);
         player1LeftButton.SetActive(!player1.isShooter);
         player1RightButton.SetActive(!player1.isShooter);
-        // Jugador 2
+
         player2ShootButton.SetActive(player2.isShooter);
         player2LeftButton.SetActive(!player2.isShooter);
         player2RightButton.SetActive(!player2.isShooter);
@@ -121,31 +132,51 @@ public class GameManager : MonoBehaviour
 
     private void HandlePlayerDeath()
     {
+        gameEnded = true;
+        Time.timeScale = 0.5f; // Cámara lenta
+        Invoke("ProcessRoundChange", 0.1f);
+    }
+
+    private void ProcessRoundChange()
+    {
+        Time.timeScale = 1f;
         currentRound++;
-        if (currentRound > maxRounds) EndGame();
-        else
+
+        if (currentRound > maxRounds)
         {
-            currentLives = maxLives;
-            SwapRoles();
-            timer = roundDuration;
-            ResetAllPlayers();
+            EndGame();
+            return;
         }
+
+        // Reinicio completo
+        player1Lives = maxLives;
+        player2Lives = maxLives;
+        ResetAllPlayers();
+        SwapRoles();
+        timer = roundDuration;
+        gameEnded = false;
+        UpdateUI();
     }
 
     private void EndRound()
     {
-        currentRound++;
-        if (currentRound > maxRounds) EndGame();
+        
+        if (currentRound > maxRounds)
+        {
+            EndGame();
+        }
         else
         {
-            currentLives = maxLives;
+            player1Lives = maxLives;
+            player2Lives = maxLives;
             SwapRoles();
             timer = roundDuration;
             ResetAllPlayers();
+            UpdateUI();
         }
     }
 
-    private void EndGame()
+    public void EndGame()
     {
         Time.timeScale = 0f;
         gameOverPanel.SetActive(true);
@@ -153,24 +184,24 @@ public class GameManager : MonoBehaviour
         Cursor.visible = true;
     }
 
-    private void AssignRoles()
+    public void AssignRoles()
     {
-        // Ronda 1: Player1 dispara, Player2 esquiva
-        player1.SetRole(true);
-        player2.SetRole(false);
+        player1.SetRole(true);  // Jugador 1 comienza como shooter
+        player2.SetRole(false); // Jugador 2 comienza como esquivador
         UpdateButtonsVisibility();
     }
 
-    private void SwapRoles()
+    public void SwapRoles()
     {
-        bool p1s = player1.isShooter;
-        player1.SetRole(!p1s);
-        player2.SetRole(p1s);
+        player1.SetRole(!player1.isShooter);
+        player2.SetRole(!player2.isShooter);
         UpdateButtonsVisibility();
+        
     }
 
     public void RestartGame()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
