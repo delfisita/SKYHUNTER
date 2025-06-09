@@ -355,8 +355,8 @@ RectTransform:
   - {fileID: 1702226335}
   - {fileID: 2097065657}
   - {fileID: 343778649}
-  - {fileID: 1454425567}
   - {fileID: 1286237359}
+  - {fileID: 1454425567}
   - {fileID: 662594490}
   - {fileID: 324163185}
   - {fileID: 233824506}
@@ -1452,7 +1452,7 @@ MonoBehaviour:
   player1: {fileID: 1224493181}
   player2: {fileID: 2851893513050368105}
   player1Health: {fileID: 1224493187}
-  player2Health: {fileID: 6609020860381175562}
+  player2Health: {fileID: 8970075703353951715}
   timerText: {fileID: 662594493}
   player1LivesText: {fileID: 233824507}
   player2LivesText: {fileID: 324163186}
@@ -2143,6 +2143,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1195500123653319826, guid: 3f14114adae0fc84288eee68026c509e, type: 3}
   firePoint: {fileID: 749779896}
   bulletSpeed: 20
+  shootButton: {fileID: 1258576988}
 --- !u!114 &1224493182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2320,7 +2321,6 @@ MonoBehaviour:
   playerID: 1
   maxLives: 3
   hitSound: {fileID: 0}
-  gameManager: {fileID: 818324003}
 --- !u!1 &1258576986
 GameObject:
   m_ObjectHideFlags: 0
@@ -4141,6 +4141,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1195500123653319826, guid: 3f14114adae0fc84288eee68026c509e, type: 3}
   firePoint: {fileID: 940199970965724650}
   bulletSpeed: 20
+  shootButton: {fileID: 539732361}
 --- !u!4 &2856583233226725387
 Transform:
   m_ObjectHideFlags: 0
@@ -4352,11 +4353,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1919101247003347629}
   - component: {fileID: 5171636972787479628}
-  - component: {fileID: 6609020860381175562}
-  - component: {fileID: 8970075703353951714}
   - component: {fileID: 1081909112103263385}
-  - component: {fileID: 2851893513050368105}
   - component: {fileID: 8970075703353951715}
+  - component: {fileID: 8970075703353951714}
+  - component: {fileID: 2851893513050368105}
   - component: {fileID: 8970075703353951716}
   m_Layer: 0
   m_Name: Player2
@@ -5093,22 +5093,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2692914999568534576}
   m_Mesh: {fileID: -8586770294792153069, guid: 94752ecaf348a44f58849c0dbb76fed3, type: 3}
---- !u!114 &6609020860381175562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3240724428039010494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2df36164e3292144598d7423594a39f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerID: 2
-  maxLives: 3
-  hitSound: {fileID: 0}
-  gameManager: {fileID: 0}
 --- !u!23 &6975160177555255667
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5572,10 +5556,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df36164e3292144598d7423594a39f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerID: 0
+  playerID: 2
   maxLives: 3
   hitSound: {fileID: 0}
-  gameManager: {fileID: 818324003}
 --- !u!82 &8970075703353951716
 AudioSource:
   m_ObjectHideFlags: 0

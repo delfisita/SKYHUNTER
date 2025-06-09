@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         UpdateUI();
         AssignRoles();
-        ResetAllPlayers();
+        
     }
 
     private void ResetAllPlayers()
@@ -130,16 +130,21 @@ public class GameManager : MonoBehaviour
         player2RightButton.SetActive(!player2.isShooter);
     }
 
-    private void HandlePlayerDeath()
+    public void HandlePlayerDeath()
     {
         gameEnded = true;
-        Time.timeScale = 0.5f; // Cámara lenta
-        Invoke("ProcessRoundChange", 0.1f);
+        
+        Invoke("ProcessRoundChange", 0.01f);
     }
 
     private void ProcessRoundChange()
     {
         Time.timeScale = 1f;
+
+        // Cambia roles primero
+        SwapRoles();
+
+        // Luego reinicia todo
         currentRound++;
 
         if (currentRound > maxRounds)
@@ -148,11 +153,9 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Reinicio completo
         player1Lives = maxLives;
         player2Lives = maxLives;
         ResetAllPlayers();
-        SwapRoles();
         timer = roundDuration;
         gameEnded = false;
         UpdateUI();
@@ -160,7 +163,7 @@ public class GameManager : MonoBehaviour
 
     private void EndRound()
     {
-        
+        currentRound++;
         if (currentRound > maxRounds)
         {
             EndGame();

@@ -9,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource audioSource;
     private int currentLives;
     private Vector3 spawnPosition;
-    public GameManager gameManager;
+    
 
     void Start()
     {
@@ -39,12 +39,7 @@ public class PlayerHealth : MonoBehaviour
         if (audioSource != null && hitSound != null)
             audioSource.PlayOneShot(hitSound);
 
-        if (currentLives <= 0)
-        {
-            
-            gameManager.SwapRoles();
-
-        }
+        
 
     }
 
