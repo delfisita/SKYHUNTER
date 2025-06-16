@@ -227,7 +227,6 @@ RectTransform:
   - {fileID: 324163185}
   - {fileID: 233824506}
   - {fileID: 1173669556}
-  - {fileID: 1917540372}
   - {fileID: 1004812584}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -742,6 +741,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3542570539333947727, guid: b3153dc28bdb00f40aec34c24f96c7ec, type: 3}
+      propertyPath: m_TagString
+      value: skinmodel
+      objectReference: {fileID: 0}
     - target: {fileID: 6141148126551206849, guid: b3153dc28bdb00f40aec34c24f96c7ec, type: 3}
       propertyPath: m_Name
       value: Player1
@@ -1330,6 +1333,8 @@ GameObject:
   m_Component:
   - component: {fileID: 818324002}
   - component: {fileID: 818324003}
+  - component: {fileID: 818324004}
+  - component: {fileID: 818324005}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1384,6 +1389,30 @@ MonoBehaviour:
   gameOverPanel: {fileID: 1004812583}
   winnerText: {fileID: 1327312681}
   restartButton: {fileID: 1917540373}
+--- !u!114 &818324004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818324000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c26d4fec93ef26649ae0bce35e1d46fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &818324005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818324000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab25d709722053743bd09c59af5077fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &854280129
 GameObject:
   m_ObjectHideFlags: 0
@@ -2096,6 +2125,7 @@ RectTransform:
   m_Children:
   - {fileID: 1209687247}
   - {fileID: 1522870556}
+  - {fileID: 1917540372}
   m_Father: {fileID: 81188224}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3485,7 +3515,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1522870558}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 818324005}
+        m_TargetAssemblyTypeName: sceneManagerr, Assembly-CSharp
+        m_MethodName: BackToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1522870558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3892,11 +3934,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2076131899}
-  m_Father: {fileID: 81188224}
+  m_Father: {fileID: 1004812584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -383, y: -238}
+  m_AnchoredPosition: {x: -283, y: -127}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1917540373
@@ -3947,6 +3989,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: RestartGame
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1004812583}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4403,7 +4457,7 @@ GameObject:
   - component: {fileID: 8795154379479775207}
   m_Layer: 0
   m_Name: Object001
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4421,7 +4475,7 @@ GameObject:
   - component: {fileID: 3701969531607386928}
   m_Layer: 0
   m_Name: Sphere001
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4543,7 +4597,7 @@ GameObject:
   - component: {fileID: 2554604056417095719}
   m_Layer: 0
   m_Name: Box009
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4668,7 +4722,7 @@ GameObject:
   - component: {fileID: 8460665877759447880}
   m_Layer: 0
   m_Name: Cylinder007
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4686,7 +4740,7 @@ GameObject:
   - component: {fileID: 3286446640197172740}
   m_Layer: 0
   m_Name: Object012
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4846,7 +4900,7 @@ GameObject:
   - component: {fileID: 6975160177555255667}
   m_Layer: 0
   m_Name: Object011
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4984,7 +5038,7 @@ GameObject:
   - component: {fileID: 8370223577149547704}
   m_Layer: 0
   m_Name: Box012
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5002,7 +5056,7 @@ GameObject:
   - component: {fileID: 4464623209388070709}
   m_Layer: 0
   m_Name: Box010
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5236,7 +5290,7 @@ GameObject:
   - component: {fileID: 7817082723563592082}
   m_Layer: 0
   m_Name: Line001
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5483,7 +5537,7 @@ GameObject:
   - component: {fileID: 4527524030290501158}
   m_Layer: 0
   m_Name: Box007
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5601,7 +5655,7 @@ GameObject:
   - component: {fileID: 3804803607787754702}
   m_Layer: 0
   m_Name: Cylinder009
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5619,7 +5673,7 @@ GameObject:
   - component: {fileID: 1472979485862937895}
   m_Layer: 0
   m_Name: Cylinder001
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5637,7 +5691,7 @@ GameObject:
   - component: {fileID: 2975857347408134259}
   m_Layer: 0
   m_Name: Cylinder004
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5678,7 +5732,7 @@ GameObject:
   - component: {fileID: 7533761751947143543}
   m_Layer: 0
   m_Name: Object015
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5696,7 +5750,7 @@ GameObject:
   - component: {fileID: 1281007744157969701}
   m_Layer: 0
   m_Name: Box008
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5714,7 +5768,7 @@ GameObject:
   - component: {fileID: 4351690568954958669}
   m_Layer: 0
   m_Name: Cylinder008
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5732,7 +5786,7 @@ GameObject:
   - component: {fileID: 78107066788739554}
   m_Layer: 0
   m_Name: Box011
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5794,7 +5848,7 @@ GameObject:
   - component: {fileID: 170541786672229994}
   m_Layer: 0
   m_Name: Object009
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5812,7 +5866,7 @@ GameObject:
   - component: {fileID: 3127736264725320549}
   m_Layer: 0
   m_Name: Box004
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5948,7 +6002,7 @@ GameObject:
   - component: {fileID: 3133696042061063949}
   m_Layer: 0
   m_Name: Box001
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6076,7 +6130,7 @@ GameObject:
   - component: {fileID: 2915377266388958004}
   m_Layer: 0
   m_Name: Box005
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6209,7 +6263,7 @@ GameObject:
   - component: {fileID: 1602271029115369672}
   m_Layer: 0
   m_Name: Cylinder010
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6299,7 +6353,7 @@ GameObject:
   - component: {fileID: 5859006266916949640}
   m_Layer: 0
   m_Name: Object014
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6359,7 +6413,7 @@ GameObject:
   - component: {fileID: 1770037146585511848}
   m_Layer: 0
   m_Name: Object013
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6589,7 +6643,7 @@ GameObject:
   - component: {fileID: 647739292037058216}
   m_Layer: 0
   m_Name: Box013
-  m_TagString: Untagged
+  m_TagString: skinmodel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

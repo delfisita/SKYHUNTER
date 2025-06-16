@@ -1872,7 +1872,7 @@ GameObject:
   - component: {fileID: 5309854969029634260}
   - component: {fileID: 6998633843878878244}
   m_Layer: 0
-  m_Name: Player2 1
+  m_Name: 'Player2 '
   m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1952,10 +1952,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df36164e3292144598d7423594a39f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerID: 0
+  maxLives: 3
   hitSound: {fileID: 0}
-  hitEffect: {fileID: 0}
-  hitMaterial: {fileID: 0}
-  flashDuration: 0.1
 --- !u!114 &4237832546323313071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2008,10 +2007,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7589b4264e2a05947ad652a84cfe6e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerID: 0
   isShooter: 0
   bulletPrefab: {fileID: 1195500123653319826, guid: 3f14114adae0fc84288eee68026c509e, type: 3}
   firePoint: {fileID: 5458240190152206759}
   bulletSpeed: 5
+  shootButton: {fileID: 0}
 --- !u!1 &7659282957940768306
 GameObject:
   m_ObjectHideFlags: 0
