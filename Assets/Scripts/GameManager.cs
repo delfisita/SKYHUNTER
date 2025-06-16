@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -31,6 +33,7 @@ public class GameManager : MonoBehaviour
     public Text player2LivesText;
     public Text roundText;
     public GameObject gameOverPanel;
+    public TMP_Text winnerText; 
     public Button restartButton;
 
     private float timer;
@@ -38,6 +41,8 @@ public class GameManager : MonoBehaviour
     private bool gameEnded = false;
     private int player1Lives;
     private int player2Lives;
+    private int player1Wins = 0;
+    private int player2Wins = 0;
 
     public static GameManager Instance { get; private set; }
 
@@ -102,7 +107,6 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         UpdateUI();
         AssignRoles();
-        
     }
 
     private void ResetAllPlayers()
@@ -133,7 +137,11 @@ public class GameManager : MonoBehaviour
     public void HandlePlayerDeath()
     {
         gameEnded = true;
-        
+
+        // Determinar qué jugador perdió esta ronda
+        if (player1Lives <= 0) player2Wins++;
+        else if (player2Lives <= 0) player1Wins++;
+
         Invoke("ProcessRoundChange", 0.01f);
     }
 
@@ -163,6 +171,10 @@ public class GameManager : MonoBehaviour
 
     private void EndRound()
     {
+        
+        if (player1.isShooter) player2Wins++;
+        else player1Wins++;
+
         currentRound++;
         if (currentRound > maxRounds)
         {
@@ -185,6 +197,17 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        // Determinar el ganador final
+        if (player1Wins > player2Wins)
+        {
+            winnerText.text = "¡Jugador 1 Gana!";
+        }
+        else if (player2Wins > player1Wins)
+        {
+            winnerText.text = "¡Jugador 2 Gana!";
+        }
+        
     }
 
     public void AssignRoles()
@@ -199,7 +222,6 @@ public class GameManager : MonoBehaviour
         player1.SetRole(!player1.isShooter);
         player2.SetRole(!player2.isShooter);
         UpdateButtonsVisibility();
-        
     }
 
     public void RestartGame()
