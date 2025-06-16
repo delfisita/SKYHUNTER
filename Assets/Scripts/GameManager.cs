@@ -207,7 +207,17 @@ public class GameManager : MonoBehaviour
         {
             winnerText.text = "¡Jugador 2 Gana!";
         }
+
+        SavePoints(50);
+    }
+
+    private void SavePoints(int pointsToAdd)
+    {
         
+        int currentPoints = PlayerPrefs.GetInt("TotalPoints", 0);
+        currentPoints += pointsToAdd;
+        PlayerPrefs.SetInt("TotalPoints", currentPoints);
+        PlayerPrefs.Save(); 
     }
 
     public void AssignRoles()
