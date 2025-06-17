@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-
 public class GameManager : MonoBehaviour
 {
     [Header("Botones UI Jugador 1")]
@@ -27,13 +26,15 @@ public class GameManager : MonoBehaviour
     public PlayerHealth player1Health;
     public PlayerHealth player2Health;
 
+    [Header("Corazones de vida")]
+    public Image[] player1Hearts; // Corazones del jugador 1
+    public Image[] player2Hearts; // Corazones del jugador 2
+
     [Header("Interfaz de Usuario")]
     public Text timerText;
-    public Text player1LivesText;
-    public Text player2LivesText;
     public Text roundText;
     public GameObject gameOverPanel;
-    public TMP_Text winnerText; 
+    public TMP_Text winnerText;
     public Button restartButton;
 
     private float timer;
@@ -54,7 +55,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Inicialización de botones
         player1ShootButton.SetActive(false);
         player1LeftButton.SetActive(false);
         player1RightButton.SetActive(false);
@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour
         player2LeftButton.SetActive(false);
         player2RightButton.SetActive(false);
 
-        // Inicialización de vidas
         player1Lives = maxLives;
         player2Lives = maxLives;
 
@@ -85,13 +84,11 @@ public class GameManager : MonoBehaviour
 
     public void PlayerHit(int playerID)
     {
-        // Actualizar vidas
         if (playerID == 1) player1Lives--;
         else if (playerID == 2) player2Lives--;
 
         UpdateUI();
 
-        // Verificar fin de ronda
         if (player1Lives <= 0 || player2Lives <= 0)
         {
             HandlePlayerDeath();
@@ -117,10 +114,18 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        player1LivesText.text = $"J1: {player1Lives}/{maxLives}";
-        player2LivesText.text = $"J2: {player2Lives}/{maxLives}";
         timerText.text = $"Tiempo: {Mathf.CeilToInt(timer)}";
         roundText.text = $"Ronda: {currentRound}/{maxRounds}";
+
+        for (int i = 0; i < player1Hearts.Length; i++)
+        {
+            player1Hearts[i].gameObject.SetActive(i < player1Lives);
+        }
+
+        for (int i = 0; i < player2Hearts.Length; i++)
+        {
+            player2Hearts[i].gameObject.SetActive(i < player2Lives);
+        }
     }
 
     private void UpdateButtonsVisibility()
@@ -138,7 +143,6 @@ public class GameManager : MonoBehaviour
     {
         gameEnded = true;
 
-        // Determinar qué jugador perdió esta ronda
         if (player1Lives <= 0) player2Wins++;
         else if (player2Lives <= 0) player1Wins++;
 
@@ -148,11 +152,8 @@ public class GameManager : MonoBehaviour
     private void ProcessRoundChange()
     {
         Time.timeScale = 1f;
-
-        // Cambia roles primero
         SwapRoles();
 
-        // Luego reinicia todo
         currentRound++;
 
         if (currentRound > maxRounds)
@@ -171,7 +172,6 @@ public class GameManager : MonoBehaviour
 
     private void EndRound()
     {
-        
         if (player1.isShooter) player2Wins++;
         else player1Wins++;
 
@@ -198,32 +198,16 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Determinar el ganador final
         if (player1Wins > player2Wins)
-        {
             winnerText.text = "¡Jugador 1 Gana!";
-        }
         else if (player2Wins > player1Wins)
-        {
             winnerText.text = "¡Jugador 2 Gana!";
-        }
-
-        SavePoints(50);
-    }
-
-    private void SavePoints(int pointsToAdd)
-    {
-        
-        int currentPoints = PlayerPrefs.GetInt("TotalPoints", 0);
-        currentPoints += pointsToAdd;
-        PlayerPrefs.SetInt("TotalPoints", currentPoints);
-        PlayerPrefs.Save(); 
     }
 
     public void AssignRoles()
     {
-        player1.SetRole(true);  // Jugador 1 comienza como shooter
-        player2.SetRole(false); // Jugador 2 comienza como esquivador
+        player1.SetRole(true);
+        player2.SetRole(false);
         UpdateButtonsVisibility();
     }
 
