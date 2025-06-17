@@ -13,4 +13,8 @@ public class sceneManagerr : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+    public void salir()
+    {
+        Application.Quit();
+    }
 }
