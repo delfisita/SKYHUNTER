@@ -12,7 +12,7 @@ public class AplySelectedSkin : MonoBehaviour
         Material skinMaterial = SkinManager.Instance.GetCurrentSkinMaterial();
         if (skinMaterial == null) return;
 
-        GameObject[] skinModels = GameObject.FindGameObjectsWithTag("skinmodel");
+        GameObject[] skinModels = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject model in skinModels)
         {
             Renderer renderer = model.GetComponent<Renderer>();
