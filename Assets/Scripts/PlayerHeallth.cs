@@ -9,13 +9,20 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource audioSource;
     private int currentLives;
     private Vector3 spawnPosition;
-    
+    private PlayerController playerController; // Agregado
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         currentLives = maxLives;
         spawnPosition = transform.position;
+
+        // Obtener referencia al PlayerController
+        playerController = GetComponent<PlayerController>();
+        if (playerController == null)
+        {
+            Debug.LogWarning("PlayerHealth: No se encontró PlayerController en el mismo GameObject.");
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -25,6 +32,14 @@ public class PlayerHealth : MonoBehaviour
             Bullet bullet = other.GetComponent<Bullet>();
             if (bullet != null && bullet.shooterID != playerID)
             {
+                // Ignorar daño si está invencible
+                if (playerController != null && playerController.IsInvincible())
+                {
+                    // Opcional: destruir la bala pero no hacer daño
+                    Destroy(other.gameObject);
+                    return;
+                }
+
                 Destroy(other.gameObject);
                 TakeHit();
             }
@@ -39,8 +54,7 @@ public class PlayerHealth : MonoBehaviour
         if (audioSource != null && hitSound != null)
             audioSource.PlayOneShot(hitSound);
 
-        
-
+        // Opcional: aquí podés agregar efectos de daño, animaciones, etc.
     }
 
     public void ResetPlayer()

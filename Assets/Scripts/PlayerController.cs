@@ -11,6 +11,18 @@ public class PlayerController : MonoBehaviour
     public float bulletSpeed = 15f;
     public Button shootButton;
 
+    private bool isInvincible = false;
+    private Renderer playerRenderer;
+    private Color originalColor;
+    public Color invincibleColor = Color.yellow; // Color cuando es invencible
+
+    void Start()
+    {
+        playerRenderer = GetComponentInChildren<Renderer>();
+        if (playerRenderer != null)
+            originalColor = playerRenderer.material.color;
+    }
+
     public void SetRole(bool shooter)
     {
         isShooter = shooter;
@@ -38,4 +50,31 @@ public class PlayerController : MonoBehaviour
         shootButton.interactable = true;
     }
 
+    // Método para activar invencibilidad
+    public void ActivateInvincibility(float duration)
+    {
+        if (!isInvincible)
+            StartCoroutine(InvincibilityCoroutine(duration));
+    }
+
+    private IEnumerator InvincibilityCoroutine(float duration)
+    {
+        isInvincible = true;
+        if (playerRenderer != null)
+            playerRenderer.material.color = invincibleColor;
+
+        // Aquí podés desactivar colisiones o ignorar daños en otros scripts según tu implementación de daño.
+
+        yield return new WaitForSeconds(duration);
+
+        if (playerRenderer != null)
+            playerRenderer.material.color = originalColor;
+        isInvincible = false;
+    }
+
+    // Método para verificar si el jugador está invencible (puede usar PlayerHealth)
+    public bool IsInvincible()
+    {
+        return isInvincible;
+    }
 }

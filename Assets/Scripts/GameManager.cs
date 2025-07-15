@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,6 +38,9 @@ public class GameManager : MonoBehaviour
     public TMP_Text winnerText;
     public Button restartButton;
 
+    [Header("Power-Up")]
+    public InvincibilityPowerUpManager powerUpManager;
+
     private float timer;
     private int currentRound = 1;
     private bool gameEnded = false;
@@ -67,6 +71,8 @@ public class GameManager : MonoBehaviour
 
         InitializeGame();
         restartButton.onClick.AddListener(RestartGame);
+
+        StartCoroutine(ShowPowerUpButtonRoutine());
     }
 
     void Update()
@@ -202,11 +208,12 @@ public class GameManager : MonoBehaviour
             winnerText.text = "¡Jugador 1 Gana!";
         else if (player2Wins > player1Wins)
             winnerText.text = "¡Jugador 2 Gana!";
+
         SavePoints(50);
     }
+
     private void SavePoints(int pointsToAdd)
     {
-
         int currentPoints = PlayerPrefs.GetInt("TotalPoints", 0);
         currentPoints += pointsToAdd;
         PlayerPrefs.SetInt("TotalPoints", currentPoints);
@@ -218,6 +225,9 @@ public class GameManager : MonoBehaviour
         player1.SetRole(true);
         player2.SetRole(false);
         UpdateButtonsVisibility();
+
+        if (powerUpManager != null)
+            powerUpManager.ResetButton();
     }
 
     public void SwapRoles()
@@ -225,11 +235,31 @@ public class GameManager : MonoBehaviour
         player1.SetRole(!player1.isShooter);
         player2.SetRole(!player2.isShooter);
         UpdateButtonsVisibility();
+
+        if (powerUpManager != null)
+            powerUpManager.ResetButton();
     }
 
     public void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    
+    private IEnumerator ShowPowerUpButtonRoutine()
+    {
+        while (currentRound <= maxRounds)
+        {
+            yield return new WaitForSeconds(10f);
+
+            if (powerUpManager != null)
+            {
+                powerUpManager.ShowButtonNow();
+            }
+
+           
+            yield return new WaitForSeconds(roundDuration - 20f);
+        }
     }
 }

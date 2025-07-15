@@ -10,40 +10,55 @@ public class PlayerMovement : MonoBehaviour
     public float rotacionEsquive = 30f;
     public float tiempoEsquive = 0.5f;
 
+    [Header("Invencibilidad")]
+    public float invincibilityDuration = 2f;  // Duración base
+    public bool isInvincible = false;
+    private float invincibilityTimer = 0f;
+
     private float tiempoUltimoEsquive = -Mathf.Infinity;
     private int moveDirection = 0;
 
     private float initialPositionX;
-    private Quaternion rotacionInicial; // Guardamos la rotación inicial
-    private Quaternion rotacionObjetivo;
-    private bool isEsquivando = false; // Para controlar cuándo aplicar la rotación de esquive
+    private float rotacionBaseY;
+    private float rotacionZActual = 0f;
+    private float rotacionZObjetivo = 0f;
+
+    public PlayerController controller; // referencia asignada en inspector o en Start()
+
+    private Renderer playerRenderer;
 
     void Start()
     {
         initialPositionX = transform.position.x;
 
-        // Configurar rotación inicial según el playerID
-        if (playerID == 1)
-        {
-            rotacionInicial = Quaternion.Euler(0, 0, 0);
-        }
-        else if (playerID == 2)
-        {
-            rotacionInicial = Quaternion.Euler(0, 180, 0);
-        }
-        else
-        {
-            Debug.LogWarning("PlayerMovement: playerID no válido. Debe ser 1 o 2.");
-            rotacionInicial = Quaternion.identity;
-        }
+        rotacionBaseY = (playerID == 2) ? 180f : 0f;
 
-        transform.rotation = rotacionInicial;
-        rotacionObjetivo = rotacionInicial;
+        // Setear rotación base Y sin tocar Z ni X
+        transform.rotation = Quaternion.Euler(0f, rotacionBaseY, 0f);
+
+        playerRenderer = GetComponent<Renderer>();
+
+        if (controller == null)
+        {
+            controller = GetComponent<PlayerController>();
+        }
     }
 
     void Update()
     {
-        // Movimiento horizontal
+        // Invencibilidad timer
+        if (isInvincible)
+        {
+            invincibilityTimer -= Time.deltaTime;
+            if (invincibilityTimer <= 0f)
+            {
+                DisableInvincibility();
+            }
+        }
+
+        if (controller != null && controller.isShooter) return;
+
+        // Movimiento lateral con límite
         if (moveDirection != 0)
         {
             Vector3 movement = new Vector3(moveDirection, 0, 0) * moveSpeed * Time.deltaTime;
@@ -61,37 +76,34 @@ public class PlayerMovement : MonoBehaviour
             transform.position = new Vector3(newX, transform.position.y, transform.position.z);
         }
 
-        // Solo interpolar rotación si está esquivando
-        if (isEsquivando || transform.rotation != rotacionObjetivo)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotacionObjetivo, 5f * Time.deltaTime);
-        }
+        // Rotación suave: manteniendo la base Y + la inclinación Z del esquive
+        Quaternion baseRotation = Quaternion.Euler(0f, rotacionBaseY, 0f);
+        Quaternion leanRotation = Quaternion.Euler(0f, 0f, rotacionZObjetivo);
+        transform.rotation = Quaternion.Lerp(transform.rotation, baseRotation * leanRotation, 5f * Time.deltaTime);
     }
 
     public void MoveLeft()
     {
+        if (controller != null && controller.isShooter) return;
         if (Time.time < tiempoUltimoEsquive + esquiveCooldown) return;
 
         moveDirection = -1;
         tiempoUltimoEsquive = Time.time;
-        isEsquivando = true;
 
-        float angulo = (playerID == 1) ? rotacionEsquive : -rotacionEsquive;
-        rotacionObjetivo = rotacionInicial * Quaternion.Euler(0, 0, angulo);
+        rotacionZObjetivo = (playerID == 1) ? rotacionEsquive : -rotacionEsquive;
 
         Invoke(nameof(VolverCentro), tiempoEsquive);
     }
 
     public void MoveRight()
     {
+        if (controller != null && controller.isShooter) return;
         if (Time.time < tiempoUltimoEsquive + esquiveCooldown) return;
 
         moveDirection = 1;
         tiempoUltimoEsquive = Time.time;
-        isEsquivando = true;
 
-        float angulo = (playerID == 1) ? -rotacionEsquive : rotacionEsquive;
-        rotacionObjetivo = rotacionInicial * Quaternion.Euler(0, 0, angulo);
+        rotacionZObjetivo = (playerID == 1) ? -rotacionEsquive : rotacionEsquive;
 
         Invoke(nameof(VolverCentro), tiempoEsquive);
     }
@@ -99,14 +111,42 @@ public class PlayerMovement : MonoBehaviour
     private void VolverCentro()
     {
         moveDirection = 0;
-        rotacionObjetivo = rotacionInicial;
-        isEsquivando = false;
+        rotacionZObjetivo = 0f;
     }
 
     public void StopMoving()
     {
         moveDirection = 0;
-        rotacionObjetivo = rotacionInicial;
-        isEsquivando = false;
+        rotacionZObjetivo = 0f;
+    }
+
+    // Invencibilidad
+    public void ActivateInvincibility()
+    {
+        isInvincible = true;
+        invincibilityTimer = invincibilityDuration;
+
+        if (playerRenderer != null)
+        {
+            // Ejemplo: cambiar color para mostrar invencibilidad
+            playerRenderer.material.color = Color.yellow;
+        }
+    }
+
+    private void DisableInvincibility()
+    {
+        isInvincible = false;
+        if (playerRenderer != null)
+        {
+            playerRenderer.material.color = Color.white;
+        }
+    }
+
+    // Ejemplo de recibir daño, bloqueado si invencible
+    public void TakeDamage(int damage)
+    {
+        if (isInvincible) return;
+
+        // Aquí la lógica para perder vida o morir
     }
 }
